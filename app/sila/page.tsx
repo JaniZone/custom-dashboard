@@ -12,16 +12,13 @@ const Page: React.FC = () => {
   }, []);
 
   const data = [
-    { year: '1991', value: 3 },
-    { year: '1992', value: 4 },
-    { year: '1993', value: 3.5 },
-    { year: '1994', value: 5 },
-    { year: '1995', value: 4.9 },
-    { year: '1996', value: 6 },
-    { year: '1997', value: 7 },
-    { year: '1998', value: 9 },
-    { year: '1999', value: 13 },
+    { country: 'India', Population: 140, colorField:'India' },
+    { country: 'USA', Population: 33, colorField:'USA' },
+    { country: 'Japan', Population: 12, colorField:'Japan' },
+    { country: 'China', Population: 141, colorField:'China' },
+    { country: 'Australia', Population: 2.6, colorField:'Austrslia' }
   ];
+
 
   if (!chartLoaded) return null;
 
@@ -29,11 +26,12 @@ const Page: React.FC = () => {
 
   const props = {
     data,
-    xField: 'year',
-    yField: 'value',
+    xField: 'country',
+    yField: 'Population',
+    colorField:'colorField',
     columnStyle: {
-      fillOpacity: 0.8,
-    },
+    fillOpacity: 0.8,
+    }
   };
 
   return < Column {...props} />;
