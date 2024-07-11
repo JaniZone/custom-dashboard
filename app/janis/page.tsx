@@ -1,17 +1,14 @@
 "use client";
-
 import React, { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-
-// Dynamically import the Bar component with SSR disabled
-const Bar = dynamic(() => import('@ant-design/charts').then(mod => mod.Bar), { ssr: false });
 
 const Page: React.FC = () => {
-  const [isClient, setIsClient] = useState(false);
+  const [chartLoaded, setChartLoaded] = useState(false);
 
   useEffect(() => {
-    // This will only run on the client side
-    setIsClient(true);
+    // Dynamically load Ant Design Charts library when component mounts
+    import('@ant-design/charts').then(() => {
+      setChartLoaded(true);
+    });
   }, []);
 
   const data = [
@@ -22,16 +19,19 @@ const Page: React.FC = () => {
     { Country: 'Australia', Population: 2.6, colorField: 'Australia' },
   ];
 
+  if (!chartLoaded) return null;
+
+  const { Bar } = require('@ant-design/charts');
+
   const props = {
     data,
     xField: 'Country',
     yField: 'Population',
     colorField: 'colorField',
-    barStyle: { fillOpacity: 0.6 }, // Optional: Adjust opacity if needed
+    barStyle: { fillOpacity: 0.6 },
   };
 
-  // Render the chart only on the client side
-  return isClient ? <Bar {...props} /> : null;
+  return <Bar {...props} />;
 };
 
 export default Page;
