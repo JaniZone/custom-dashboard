@@ -31,7 +31,13 @@ const Page: React.FC = () => {
     barStyle: { fillOpacity: 0.6 },
   };
 
-  return <Bar {...props} />;
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div style={{ width: '60%' }}>
+          <Bar {...props} />
+        </div>
+      </div>
+    );
 };
 
 export default Page;
