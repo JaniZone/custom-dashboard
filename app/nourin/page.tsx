@@ -12,15 +12,12 @@ const Page: React.FC = () => {
   }, []);
 
   const data = [
-    { type: '1991', value: 3 },
-    { type: '1992', value: 4 },
-    { type: '1993', value: 3.5 },
-    { type: '1994', value: 5 },
-    { type: '1995', value: 4.9 },
-    { type: '1996', value: 6 },
-    { type: '1997', value: 7 },
-    { type: '1998', value: 9 },
-    { type: '1999', value: 13 },
+    { country: 'India', population: 70 },
+    { country: 'US', population: 60 },
+    { country: 'Japan', population: 80},
+    { country: 'China', population: 90 },
+    {country: 'Austrailia',population: 50 },
+    
   ];
 
   if (!chartLoaded) return null;
@@ -30,13 +27,10 @@ const Page: React.FC = () => {
   const props = {
     appendPadding: 10,
     data,
-    angleField: 'value',
-    colorField: 'type',
+    angleField: 'population',
+    colorField: 'country',
     radius: 1,
-    label: {
-      type: 'outer',
-      content: '{name} {percentage}',
-    },
+   
     interactions: [
       {
         type: 'pie-legend-active',
@@ -51,11 +45,7 @@ const Page: React.FC = () => {
       '#5D7092',
       '#F6BD16',
       '#E8684A',
-      '#6DC8EC',
-      '#9270CA',
-      '#FF9D4D',
-      '#269A99',
-      '#FF99C3',
+      
     ],
   };
 
