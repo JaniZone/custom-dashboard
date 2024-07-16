@@ -1,11 +1,13 @@
 import Link from "next/link";
 export default function Home() {
   return (
-    <div>
-      <h1>Welcome to Next.js with TypeScript</h1>
-     <p>
-        <Link href="\janis">Go to Hello World Page</Link>
-      </p>
-    </div>
+    <>
+      <h1>This is the main page</h1>
+      <button>
+      <Link href="/hello">
+        Click to go to Hello Page
+      </Link>
+      </button>
+    </>
   );
 }

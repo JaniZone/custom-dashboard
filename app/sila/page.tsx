@@ -12,12 +12,13 @@ const Page: React.FC = () => {
   }, []);
 
   const data = [
-    { country: 'India', Population: 140, colorField: 'India' },
-    { country: 'USA', Population: 33, colorField: 'USA' },
-    { country: 'Japan', Population: 12, colorField: 'Japan' },
-    { country: 'China', Population: 141, colorField: 'China' },
-    { country: 'Australia', Population: 2.6, colorField: 'Austrslia' }
+    { country: 'India', Population: 140, colorField:'India' },
+    { country: 'USA', Population: 33, colorField:'USA' },
+    { country: 'Japan', Population: 12, colorField:'Japan' },
+    { country: 'China', Population: 141, colorField:'China' },
+    { country: 'Australia', Population: 2.6, colorField:'Austrslia' }
   ];
+
 
   if (!chartLoaded) return null;
 
