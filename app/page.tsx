@@ -1,9 +1,5 @@
-
-import React from 'react';
-import Link from 'next/link';
-
-export default function Home(){
-
+import Link from "next/link";
+export default function Home() {
   return (
     <div>
       <h1>Welcome to Next.js with TypeScript</h1>
@@ -12,5 +8,4 @@ export default function Home(){
       </p>
     </div>
   );
-};
-
+}

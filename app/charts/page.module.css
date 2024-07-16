@@ -1,0 +1,12 @@
+/* pages/page.module.css */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .chart {
+    margin: 20px 0;
+    width: 80%;
+  }
+  
