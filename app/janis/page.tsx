@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from 'react';
 
 const Page: React.FC = () => {
@@ -34,7 +35,7 @@ const Page: React.FC = () => {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <div style={{ width: '60%' }}>
-          <Bar {...props} />
+        <Bar {...props} />
         </div>
       </div>
     );

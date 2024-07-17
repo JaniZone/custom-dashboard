@@ -1,8 +1,10 @@
 "use client";
-import PieChart from '@/components/pie-chart';
 import React, { useEffect, useState } from 'react';
+import dynamic from "next/dynamic";
 
-const Page: React.FC = () => {
+const Pie = dynamic(() => import("@ant-design/charts").then(mode => mode.Pie), {ssr: false})
+
+const PieChart: React.FC = () => {
   const [chartLoaded, setChartLoaded] = useState(false);
 
   useEffect(() => {
@@ -60,4 +62,4 @@ const Page: React.FC = () => {
   ) 
 };
 
-export default Page;
+export default PieChart;
