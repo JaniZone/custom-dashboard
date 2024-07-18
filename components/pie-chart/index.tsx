@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 
 const Pie = dynamic(() => import("@ant-design/charts").then(mode => mode.Pie), {ssr: false})
 
-const PieChart: React.FC = () => {
+const PieChart = ({ height = 300, width = 300}) => {
   const [chartLoaded, setChartLoaded] = useState(false);
 
   useEffect(() => {
@@ -33,7 +33,10 @@ const PieChart: React.FC = () => {
     angleField: 'population',
     colorField: 'country',
     radius: 1,
-   
+    padding: 50,
+    autoFit: true,
+    width,
+    height,
     interactions: [
       {
         type: 'pie-legend-active',
@@ -53,11 +56,11 @@ const PieChart: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <div style={{ width: '60%' }}>
+    //<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+       // <div style={{ width: '60%' }}>
         <Pie {...props} />
-        </div>
-      </div>
+       // </div>
+     // </div>
     
   ) 
 };

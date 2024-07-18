@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import dynamic from "next/dynamic";
 
 const Column = dynamic(() => import("@ant-design/charts").then(mode => mode.Column), {ssr: false})
-const ColumnChart: React.FC = () => {
+const ColumnChart = ({ height = 300, width = 300}) => {
   const [chartLoaded, setChartLoaded] = useState(false);
 
   useEffect(() => {
@@ -30,9 +30,11 @@ const ColumnChart: React.FC = () => {
     xField: 'country',
     yField: 'Population',
     colorField: 'colorField',
-    columnStyle: {
-      fillOpacity: 0.8,
-    }
+    columnStyle: {fillOpacity: 0.8,},
+    padding: 50,
+    autoFit: true,
+    width,
+    height
   };
 
   return <>
