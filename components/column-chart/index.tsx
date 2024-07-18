@@ -1,7 +1,9 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import dynamic from "next/dynamic";
 
-const Page: React.FC = () => {
+const Column = dynamic(() => import("@ant-design/charts").then(mode => mode.Column), {ssr: false})
+const ColumnChart: React.FC = () => {
   const [chartLoaded, setChartLoaded] = useState(false);
 
   useEffect(() => {
@@ -12,13 +14,12 @@ const Page: React.FC = () => {
   }, []);
 
   const data = [
-    { country: 'India', Population: 140, colorField:'India' },
-    { country: 'USA', Population: 33, colorField:'USA' },
-    { country: 'Japan', Population: 12, colorField:'Japan' },
-    { country: 'China', Population: 141, colorField:'China' },
-    { country: 'Australia', Population: 2.6, colorField:'Austrslia' }
+    { country: 'India', Population: 140, colorField: 'India' },
+    { country: 'USA', Population: 33, colorField: 'USA' },
+    { country: 'Japan', Population: 12, colorField: 'Japan' },
+    { country: 'China', Population: 141, colorField: 'China' },
+    { country: 'Australia', Population: 2.6, colorField: 'Austrslia' }
   ];
-
 
   if (!chartLoaded) return null;
 
@@ -39,5 +40,5 @@ const Page: React.FC = () => {
   </>
 };
 
-export default Page;
+export default ColumnChart;
 
