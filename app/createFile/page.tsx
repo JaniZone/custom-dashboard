@@ -1,7 +1,7 @@
 // pages/index.tsx
 "use client";
 import React from 'react';
-import fs from 'fs';
+// import fs from 'fs';
 import path from 'path';
 import { NextPage } from 'next';
 
@@ -16,12 +16,12 @@ const Home: NextPage = () => {
         const jsonData = JSON.stringify(data, null, 2);
         const filePath = path.join(process.cwd(), 'public', 'data.json');
 
-        try {
-            fs.writeFileSync(filePath, jsonData);
-            console.log('JSON file saved successfully');
-        } catch (error) {
-            console.error('Error saving JSON file:', error);
-        }
+        // try {
+        //     fs.writeFileSync(filePath, jsonData);
+        //     console.log('JSON file saved successfully');
+        // } catch (error) {
+        //     console.error('Error saving JSON file:', error);
+        // }
     };
 
     return (
