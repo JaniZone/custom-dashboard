@@ -62,18 +62,18 @@ const ComplexInterfaceGrid = () => {
     setData(data.filter((item) => item.id !== i));
   };
 
-  const getChartComponent = (chartType: string, chartData: { type: string; value: number; }[]) => {
-    switch (chartType) {
-      case 'bar':
-        return <BarChart data={chartData} />;
-      case 'pie':
-        return <PieChart data={chartData} />;
-      case 'column':
-        return <ColumnChart data={chartData} />;
-      default:
-        return null;
-    }
-  };
+  // const getChartComponent = (chartType: string, chartData: { type: string; value: number; }[]) => {
+  //   switch (chartType) {
+  //     case 'bar':
+  //       return <BarChart data={chartData} />;
+  //     case 'pie':
+  //       return <PieChart data={chartData} />;
+  //     case 'column':
+  //       return <ColumnChart data={chartData} />;
+  //     default:
+  //       return null;
+    // }
+  // };
 
   return (
     <div>
@@ -119,7 +119,7 @@ const ComplexInterfaceGrid = () => {
                 </button>
               </div>
               <div className="chart-container">
-                {widgetData && getChartComponent(widgetData.chartType, widgetData.chartData)}
+                {/* {widgetData && getChartComponent(widgetData.chartType, widgetData.chartData)} */}
               </div>
             </div>
           );
