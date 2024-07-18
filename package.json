@@ -11,14 +11,17 @@
   "dependencies": {
     "@ant-design/charts": "^2.1.1",
     "@ant-design/plots": "^2.2.5",
+    "@next/font": "^14.2.5",
+    "fill-range": "^7.1.1",
+    "firebase": "^10.12.3",
     "lodash": "^4.17.21",
-    "next": "14.2.4",
+    "react-dropzone": "^14.2.3",
+    "react-virtualized": "^9.22.5",
+    "xlsx": "^0.18.5",
+    "next": "^14.2.5",
     "react": "^18",
     "react-dom": "^18",
-    "react-dropzone": "^14.2.3",
-    "react-grid-layout": "^1.4.4",
-    "react-virtualized": "^9.22.5",
-    "xlsx": "^0.18.5"
+    "react-grid-layout": "^1.4.4"
   },
   "devDependencies": {
     "@types/node": "^20",
