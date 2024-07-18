@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 
 const Bar = dynamic(() => import("@ant-design/charts").then(mode => mode.Bar), {ssr: false})
 
-const BarChart = () => {
+const BarChart = ({ height = 300, width = 300}) => {
 
     const data = [
         { Country: 'India', Population: 140, colorField: 'India'},
@@ -17,6 +17,10 @@ const BarChart = () => {
       yField: 'Population',
       colorField: 'colorField',
       barStyle: { fillOpacity: 0.6 },
+      padding: 50,
+      autoFit: true,
+      width,
+      height
     };
 
     return (
