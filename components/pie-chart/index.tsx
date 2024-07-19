@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 
 const Pie = dynamic(() => import("@ant-design/charts").then(mode => mode.Pie), {ssr: false})
 
-const PieChart = ({ height = 300, width = 300}) => {
+const PieChart = ({ data=[],height = 300, width = 300}) => {
   const [chartLoaded, setChartLoaded] = useState(false);
 
   useEffect(() => {
@@ -14,14 +14,7 @@ const PieChart = ({ height = 300, width = 300}) => {
     });
   }, []);
 
-  const data = [
-    { country: 'India', population: 70 },
-    { country: 'US', population: 60 },
-    { country: 'Japan', population: 80},
-    { country: 'China', population: 90 },
-    {country: 'Austrailia',population: 50 },
-    
-  ];
+
 
   if (!chartLoaded) return null;
 
@@ -30,8 +23,8 @@ const PieChart = ({ height = 300, width = 300}) => {
   const props = {
     appendPadding: 10,
     data,
-    angleField: 'population',
-    colorField: 'country',
+    angleField: 'Population',
+    colorField: 'Country',
     radius: 1,
     padding: 50,
     autoFit: true,
