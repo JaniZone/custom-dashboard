@@ -1,6 +1,6 @@
 // pages/dashboard/[id].tsx
-import { useRouter } from 'next/router';
-import { FC } from 'react';
+// import { useRouter } from 'next/router';
+import { FC } from "react";
 
 interface Dashboard {
   id: number;
@@ -15,11 +15,11 @@ const dashboards: Dashboard[] = [
 ];
 
 const DashboardPage: FC = () => {
-  const router = useRouter();
-  const { id } = router.query;
-  const dashboardId = Number(id); // Convert id to number
+  // const router = useRouter();
+  // const { id } = router.query;
+  // const dashboardId = Number(id); // Convert id to number
 
-  const dashboard = dashboards.find((d) => d.id === dashboardId);
+  const dashboard = dashboards.find((d) => d.id === 123);
 
   if (!dashboard) {
     return <p>Dashboard not found</p>;
@@ -28,7 +28,7 @@ const DashboardPage: FC = () => {
   // Handle navigation to the link associated with the dashboard
   const handleNavigate = () => {
     if (dashboard.link) {
-      router.push(dashboard.link);
+      // router.push(dashboard.link);
     }
   };
 

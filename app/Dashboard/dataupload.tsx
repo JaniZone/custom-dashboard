@@ -29,6 +29,7 @@ const FileInput: React.FC = () => {
         const sheet = workbook.Sheets[sheetName];
         const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
+        // @ts-ignore
         setFilesData((prevData) => [
           ...prevData,
           { name: file.name, data: sheetData, status: "Uploaded" },
@@ -47,8 +48,15 @@ const FileInput: React.FC = () => {
 
   return (
     <div>
-      <input type="file" accept=".xlsx,.xls" multiple onChange={handleFileUpload} className={styles.fileInput}/>
-      {filesData.length > 0 && filesData.map((fileData, fileIndex) => (
+      <input
+        type="file"
+        accept=".xlsx,.xls"
+        multiple
+        onChange={handleFileUpload}
+        className={styles.fileInput}
+      />
+      {filesData.length > 0 &&
+        filesData.map((fileData, fileIndex) => (
           <div key={fileIndex} className={styles.container}>
             <h2>{fileData.name}</h2>
             <p>Status: {fileData.status}</p>
@@ -68,13 +76,15 @@ const FileInput: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className={styles.body}>
-                  {fileData.data.slice(1).map((row: any[], rowIndex: number) => (
-                    <tr key={rowIndex}>
-                      {row.map((cell: any, cellIndex: number) => (
-                        <td key={cellIndex}>{cell}</td>
-                      ))}
-                    </tr>
-                  ))}
+                  {fileData.data
+                    .slice(1)
+                    .map((row: any[], rowIndex: number) => (
+                      <tr key={rowIndex}>
+                        {row.map((cell: any, cellIndex: number) => (
+                          <td key={cellIndex}>{cell}</td>
+                        ))}
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             )}
