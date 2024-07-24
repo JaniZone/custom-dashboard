@@ -41,7 +41,7 @@ const DashboardList: FC = () => {
           <Link
             key={dashboard.id}
             href={dashboard.link}
-            className="p-4 bg-red-400 rounded-lg"
+            className="p-4 bg-white shadow-md rounded-lg"
           >
             <div className="flex justify-center">
               <img
