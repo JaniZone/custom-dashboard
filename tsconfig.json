@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/drag/Dropzone.js","app/utils/excelUtils.js", "app/project/FileInput.tsx", "app/drag/toolbar.js"],
   "exclude": ["node_modules", ".next"]
 }

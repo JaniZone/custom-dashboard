@@ -1,20 +1,24 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 import Modal from 'react-modal';
-import { useDropzone } from 'react-dropzone';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
+import ChartWrapper from './ChartWrapper';
+import Toolbar from './Toolbar'; // Import the Toolbar
+import Dropzone from './Dropzone';
+import { buttonStyle, removeStyle, modalStyle, canvasContainerStyle, headerStyle, controlsStyle, selectStyle, inputStyle, downloadLinkStyle } from './styles';
 import * as XLSX from 'xlsx';
-import BarChart from '@/components/bar-chart';
-import PieChart from '@/components/pie-chart';
-import ColumnChart from '@/components/column-chart';
+import html2canvas from 'html2canvas';
+import { v4 as uuidv4 } from 'uuid';  // Import the uuid library
+import './styles.css'; // Import your styles
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
-const AddRemoveLayout = ({ onLayoutChange }) => {
+
+const Dashboard = ({ onLayoutChange }) => {
   const [items, setItems] = useState([]);
   const [newCounter, setNewCounter] = useState(0);
-  const [cols, setCols] = useState({
+  const [cols, setCols] = useState({ 
     lg: 12,
     md: 10,
     sm: 6,
@@ -25,6 +29,17 @@ const AddRemoveLayout = ({ onLayoutChange }) => {
   const [chartType, setChartType] = useState({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [currentWidget, setCurrentWidget] = useState(null);
+  const [dashboardName, setDashboardName] = useState('');
+  const [savedDashboards, setSavedDashboards] = useState([]);
+
+  useEffect(() => {
+    // Load saved dashboards from localStorage
+    const dashboards = Object.keys(localStorage).filter(key => key.startsWith('dashboard_'));
+    setSavedDashboards(dashboards.map(key => ({
+      id: key,
+      name: JSON.parse(localStorage.getItem(key)).name
+    })));
+  }, []);
 
   const onAddItem = useCallback(() => {
     const newItemId = `n${newCounter}`;
@@ -117,33 +132,55 @@ const AddRemoveLayout = ({ onLayoutChange }) => {
     setCurrentWidget(null);
   };
 
-  const chartComponent = (el) => {
-    switch (chartType[el.i]) {
-      case 'PieChart':
-        return <PieChart data={chartData[el.i]} height={el.h * 100} width={el.w * 100} />;
-      case 'ColumnChart':
-        return <ColumnChart data={chartData[el.i]} height={el.h * 100} width={el.w * 100} />;
-      default:
-        return <BarChart data={chartData[el.i]} height={el.h * 100} width={el.w * 100} />;
+  const saveDashboard = async () => {
+    if (dashboardName.trim() === "") {
+      alert("Please enter a dashboard name.");
+      return;
+    }
+
+    // Capture the canvas thumbnail
+    const canvasElement = document.querySelector(".canvas-container");
+    if (canvasElement) {
+      const canvas = await html2canvas(canvasElement, {
+        backgroundColor: null, // Ensure the background is transparent
+      });
+      const thumbnail = canvas.toDataURL("image/png");
+
+      const dashboardId = uuidv4(); // Generate a unique ID for the dashboard
+      const dashboardState = {
+        id: dashboardId,
+        name: dashboardName,
+        items,
+        chartData,
+        chartType,
+        thumbnail,
+      };
+      localStorage.setItem(`dashboard_${dashboardId}`, JSON.stringify(dashboardState));
+      alert('Dashboard saved!');
+      setSavedDashboards([...savedDashboards, { id: `dashboard_${dashboardId}`, name: dashboardName }]);
     }
   };
 
-  const createElement = (el) => {
-    const removeStyle = {
-      position: "absolute",
-      right: "2px",
-      top: "2px",
-      cursor: "pointer",
-      color: "#fff",
-      background: "#e74c3c",
-      borderRadius: "50%",
-      width: "20px",
-      height: "20px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    };
+  const loadDashboard = (id) => {
+    const savedDashboard = localStorage.getItem(id);
+    if (savedDashboard) {
+      const { items, chartData, chartType, name } = JSON.parse(savedDashboard);
+      setItems(items);
+      setChartData(chartData);
+      setChartType(chartType);
+      setNewCounter(items.length); // Set newCounter to avoid ID conflicts
+      setDashboardName(name); // Set the dashboard name
+    }
+  };
 
+  const deleteDashboard = (id) => {
+    localStorage.removeItem(id);
+    alert('Dashboard deleted!');
+    setSavedDashboards(savedDashboards.filter(dashboard => dashboard.id !== id));
+    setDashboardName(''); // Clear the dashboard name when deleting
+  };
+  
+  const createElement = (el) => {
     return (
       <div
         key={el.i}
@@ -161,7 +198,7 @@ const AddRemoveLayout = ({ onLayoutChange }) => {
         }}
       >
         <span className="text">{el.i}</span>
-        {chartComponent(el)}
+        <ChartWrapper el={el} chartType={chartType} chartData={chartData} />
         <span
           className="remove"
           style={removeStyle}
@@ -173,6 +210,7 @@ const AddRemoveLayout = ({ onLayoutChange }) => {
           <select
             value={chartType[el.i]}
             onChange={(e) => handleChartTypeChange(el.i, e.target.value)}
+            style={selectStyle}
           >
             <option value="BarChart">Bar Chart</option>
             <option value="PieChart">Pie Chart</option>
@@ -184,86 +222,61 @@ const AddRemoveLayout = ({ onLayoutChange }) => {
     );
   };
 
-  const buttonStyle = {
-    padding: "8px 16px",
-    margin: "10px 0",
-    background: "#3498db",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  };
-
-  const dropzoneStyle = {
-    border: "2px dashed #ccc",
-    padding: "20px",
-    textAlign: "center",
-    cursor: "pointer",
-    borderRadius: "4px",
-    background: "#f9f9f9",
-  };
-
-  const Dropzone = () => {
-    const onDrop = useCallback((acceptedFiles) => {
-      handleFileDrop(currentWidget, acceptedFiles);
-    }, [currentWidget]);
-
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-      onDrop,
-      multiple: false,
-      accept: ".xlsx, .xls",
-    });
-
-    return (
-      <div {...getRootProps()} style={dropzoneStyle}>
-        <input {...getInputProps()} />
-        {isDragActive ? <p>{"Drop the files here..."}</p> : <p>{"Drag 'n' drop an Excel file here"}</p>}
-      </div>
-    );
-  };
-
   return (
-    <div>
-      <button style={buttonStyle} onClick={onAddItem}>Add Item</button>
-      <ResponsiveReactGridLayout
-        onLayoutChange={handleLayoutChange}
-        onBreakpointChange={onBreakpointChange}
-        className="layout"
-        cols={cols}
-        rowHeight={100}
-      >
-        {items.map((el) => createElement(el))}
-      </ResponsiveReactGridLayout>
-      <Modal
+    <div style={{ display: 'flex' }}>
+      <Toolbar /> {/* Add the Toolbar here */}
+      <div style={{ marginLeft: '250px', flex: 1 }}>
+        <div className="header" style={headerStyle}>
+          <div className="controls" style={controlsStyle}>
+            <button style={buttonStyle} onClick={onAddItem}>Add Widget</button>
+            <input
+              type="text"
+              value={dashboardName}
+              onChange={(e) => setDashboardName(e.target.value)}
+              placeholder="Enter dashboard name"
+              style={inputStyle}
+            />
+            <button style={buttonStyle} onClick={saveDashboard}>Save Dashboard</button>
+          <select onChange={(e) => loadDashboard(e.target.value)} style={selectStyle}>
+            <option value="">Load Dashboard</option>
+            {savedDashboards.map(dashboard => (
+              <option key={dashboard.id} value={dashboard.id}>{dashboard.name}</option>
+            ))}
+          </select>
+          <select onChange={(e) => deleteDashboard(e.target.value)} style={selectStyle}>
+            <option value="">Delete Dashboard</option>
+            {savedDashboards.map(dashboard => (
+              <option key={dashboard.id} value={dashboard.id}>{dashboard.name}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+        <div className="canvas-container" style={canvasContainerStyle}>
+          <ResponsiveReactGridLayout
+            className="layout"
+            layouts={{ lg: items }}
+            onLayoutChange={handleLayoutChange}
+            onBreakpointChange={onBreakpointChange}
+          >
+            {items.map((item) => createElement(item))}
+          </ResponsiveReactGridLayout>
+        </div>
+        <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="Add Data"
-        style={{
-          content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-            padding: '20px',
-            borderRadius: '8px',
-          },
-        }}
+        style={modalStyle}
       >
         <h2>Add Data</h2>
-        <button style={{...buttonStyle, background: "#e74c3c"}} onClick={closeModal}>Close</button>
-        <Dropzone />
+        <button style={{ ...buttonStyle, background: "#e74c3c" }} onClick={closeModal}>Close</button>
+        <Dropzone currentWidget={currentWidget} handleFileDrop={handleFileDrop} />
+        <a href="/sample-data.xlsx" download style={{ marginTop: "10px", display: "block", color: "#3498db" }}>
+          Download Sample Data File
+        </a>
       </Modal>
+    </div>
     </div>
   );
 };
 
-export default AddRemoveLayout;
-
-
-
-// import Image from "next/image";
-//   <Image width={100} height={100} src={"https://upload.wikimedia.org/wikipedia/en/0/04/Facebook_f_logo_%282021%29.svg"} />
-      //<FileUpload setDatasrc={setDatasrc} />
-     //h <Drag datasrc={datasrc} />
+export default Dashboard;

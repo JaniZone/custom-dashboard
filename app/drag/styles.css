@@ -1,0 +1,73 @@
+/* dark-theme.css */
+body {
+    background-color: #1f2937; /* Dark background */
+    color: #fff; /* White text */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #111827; /* Slightly lighter dark background */
+    border-bottom: 1px solid #374151;
+  }
+  
+  .controls button,
+  .controls select,
+  .controls input {
+    background-color: #374151;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 4px;
+  }
+  
+  .canvas-container {
+    padding: 20px;
+  }
+  
+  .react-grid-item {
+    background-color: #111827; /* Dark widget background */
+    border: 1px solid #374151;
+  }
+  
+  .react-grid-item .remove {
+    background: #e74c3c;
+    color: #fff;
+    padding: 2px 6px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+  }
+  
+  .chart-wrapper {
+    padding: 10px;
+  }
+  
+  .select-style {
+    background-color: #374151;
+    color: #fff;
+    border: none;
+    padding: 5px;
+    border-radius: 4px;
+  }
+  
+  .button-style {
+    background-color: #708297;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .modal-content {
+    background-color: #1f2937;
+    color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
