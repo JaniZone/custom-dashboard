@@ -2,7 +2,7 @@
 import dynamic from 'next/dynamic';
 import styles from '../styles/dataupload.module.css';
 
-const DynamicFileInput = dynamic(() => import('../project/dataupload'), { ssr: false });
+const DynamicFileInput = dynamic(() => import('../drag/FileInput'), { ssr: false });
 
 const Dataupload : React.FC = () => {
   

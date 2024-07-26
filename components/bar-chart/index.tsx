@@ -15,7 +15,7 @@ const BarChart = ({ data = [], height = 300, width = 300 }) => {
       autoFit: true,
       width,
       height
-    };
+       };
 
     return (
         <div> <Bar {...props} /></div>

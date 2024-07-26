@@ -5,17 +5,20 @@ import Modal from 'react-modal';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import ChartWrapper from './ChartWrapper';
+import Toolbar from './Toolbar'; // Import the Toolbar
 import Dropzone from './Dropzone';
-import { buttonStyle, removeStyle, modalStyle, canvasContainerStyle, headerStyle, controlsStyle, selectStyle, inputStyle } from './styles';
+import { buttonStyle, removeStyle, modalStyle, canvasContainerStyle, headerStyle, controlsStyle, selectStyle, inputStyle, downloadLinkStyle } from './styles';
 import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
+import { v4 as uuidv4 } from 'uuid';  // Import the uuid library
+import './styles.css'; // Import your styles
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 const Dashboard = ({ onLayoutChange }) => {
   const [items, setItems] = useState([]);
   const [newCounter, setNewCounter] = useState(0);
-  const [cols, setCols] = useState({
+  const [cols, setCols] = useState({ 
     lg: 12,
     md: 10,
     sm: 6,
@@ -32,7 +35,10 @@ const Dashboard = ({ onLayoutChange }) => {
   useEffect(() => {
     // Load saved dashboards from localStorage
     const dashboards = Object.keys(localStorage).filter(key => key.startsWith('dashboard_'));
-    setSavedDashboards(dashboards);
+    setSavedDashboards(dashboards.map(key => ({
+      id: key,
+      name: JSON.parse(localStorage.getItem(key)).name
+    })));
   }, []);
 
   const onAddItem = useCallback(() => {
@@ -131,7 +137,7 @@ const Dashboard = ({ onLayoutChange }) => {
       alert("Please enter a dashboard name.");
       return;
     }
-  
+
     // Capture the canvas thumbnail
     const canvasElement = document.querySelector(".canvas-container");
     if (canvasElement) {
@@ -139,42 +145,41 @@ const Dashboard = ({ onLayoutChange }) => {
         backgroundColor: null, // Ensure the background is transparent
       });
       const thumbnail = canvas.toDataURL("image/png");
-  
+
+      const dashboardId = uuidv4(); // Generate a unique ID for the dashboard
       const dashboardState = {
+        id: dashboardId,
+        name: dashboardName,
         items,
         chartData,
         chartType,
         thumbnail,
-        name: dashboardName, // Include the name in the state
       };
-      localStorage.setItem(`dashboard_${dashboardName}`, JSON.stringify(dashboardState));
+      localStorage.setItem(`dashboard_${dashboardId}`, JSON.stringify(dashboardState));
       alert('Dashboard saved!');
-      setSavedDashboards([...savedDashboards, `dashboard_${dashboardName}`]);
-      console.log(dashboardState);
+      setSavedDashboards([...savedDashboards, { id: `dashboard_${dashboardId}`, name: dashboardName }]);
     }
   };
-  
 
-  const loadDashboard = (name) => {
-    const savedDashboard = localStorage.getItem(name);
+  const loadDashboard = (id) => {
+    const savedDashboard = localStorage.getItem(id);
     if (savedDashboard) {
-      const { items, chartData, chartType } = JSON.parse(savedDashboard);
+      const { items, chartData, chartType, name } = JSON.parse(savedDashboard);
       setItems(items);
       setChartData(chartData);
       setChartType(chartType);
       setNewCounter(items.length); // Set newCounter to avoid ID conflicts
-      setDashboardName(name.replace('dashboard_', ''));
+      setDashboardName(name); // Set the dashboard name
     }
   };
 
-  const deleteDashboard = (name) => {
-    localStorage.removeItem(name);
+  const deleteDashboard = (id) => {
+    localStorage.removeItem(id);
     alert('Dashboard deleted!');
-    setSavedDashboards(savedDashboards.filter(dashboard => dashboard !== name));
+    setSavedDashboards(savedDashboards.filter(dashboard => dashboard.id !== id));
     setDashboardName(''); // Clear the dashboard name when deleting
   };
   
-
   const createElement = (el) => {
     return (
       <div
@@ -218,44 +223,45 @@ const Dashboard = ({ onLayoutChange }) => {
   };
 
   return (
-    <div>
-      <div className="header" style={headerStyle}>
-        <div className="controls" style={controlsStyle}>
-          <button style={buttonStyle} onClick={onAddItem}>Add Item</button>
-          <input
-            type="text"
-            placeholder="Dashboard Name"
-            value={dashboardName}
-            onChange={(e) => setDashboardName(e.target.value)}
-            style={inputStyle}
-          />
-          <button style={buttonStyle} onClick={saveDashboard}>Save Dashboard</button>
+    <div style={{ display: 'flex' }}>
+      <Toolbar /> {/* Add the Toolbar here */}
+      <div style={{ marginLeft: '250px', flex: 1 }}>
+        <div className="header" style={headerStyle}>
+          <div className="controls" style={controlsStyle}>
+            <button style={buttonStyle} onClick={onAddItem}>Add Widget</button>
+            <input
+              type="text"
+              value={dashboardName}
+              onChange={(e) => setDashboardName(e.target.value)}
+              placeholder="Enter dashboard name"
+              style={inputStyle}
+            />
+            <button style={buttonStyle} onClick={saveDashboard}>Save Dashboard</button>
           <select onChange={(e) => loadDashboard(e.target.value)} style={selectStyle}>
             <option value="">Load Dashboard</option>
             {savedDashboards.map(dashboard => (
-              <option key={dashboard} value={dashboard}>{dashboard.replace('dashboard_', '')}</option>
+              <option key={dashboard.id} value={dashboard.id}>{dashboard.name}</option>
             ))}
           </select>
           <select onChange={(e) => deleteDashboard(e.target.value)} style={selectStyle}>
             <option value="">Delete Dashboard</option>
             {savedDashboards.map(dashboard => (
-              <option key={dashboard} value={dashboard}>{dashboard.replace('dashboard_', '')}</option>
+              <option key={dashboard.id} value={dashboard.id}>{dashboard.name}</option>
             ))}
           </select>
         </div>
       </div>
-      <div className="canvas-container" style={canvasContainerStyle}>
-        <ResponsiveReactGridLayout
-          onLayoutChange={handleLayoutChange}
-          onBreakpointChange={onBreakpointChange}
-          className="layout"
-          rowHeight={100}
-          cols={cols}
-        >
-          {items.map((el) => createElement(el))}
-        </ResponsiveReactGridLayout>
-      </div>
-      <Modal
+        <div className="canvas-container" style={canvasContainerStyle}>
+          <ResponsiveReactGridLayout
+            className="layout"
+            layouts={{ lg: items }}
+            onLayoutChange={handleLayoutChange}
+            onBreakpointChange={onBreakpointChange}
+          >
+            {items.map((item) => createElement(item))}
+          </ResponsiveReactGridLayout>
+        </div>
+        <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="Add Data"
@@ -264,7 +270,11 @@ const Dashboard = ({ onLayoutChange }) => {
         <h2>Add Data</h2>
         <button style={{ ...buttonStyle, background: "#e74c3c" }} onClick={closeModal}>Close</button>
         <Dropzone currentWidget={currentWidget} handleFileDrop={handleFileDrop} />
+        <a href="/sample-data.xlsx" download style={{ marginTop: "10px", display: "block", color: "#3498db" }}>
+          Download Sample Data File
+        </a>
       </Modal>
+    </div>
     </div>
   );
 };
