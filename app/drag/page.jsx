@@ -9,6 +9,7 @@ import Dropzone from './Dropzone';
 import { buttonStyle, removeStyle, modalStyle, canvasContainerStyle, headerStyle, controlsStyle, selectStyle, inputStyle } from './styles';
 import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
+// import { useRouter } from 'next/router';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -28,6 +29,7 @@ const Dashboard = ({ onLayoutChange }) => {
   const [currentWidget, setCurrentWidget] = useState(null);
   const [dashboardName, setDashboardName] = useState('');
   const [savedDashboards, setSavedDashboards] = useState([]);
+  // const router = useRouter();
 
   useEffect(() => {
     // Load saved dashboards from localStorage
@@ -153,7 +155,6 @@ const Dashboard = ({ onLayoutChange }) => {
       console.log(dashboardState);
     }
   };
-  
 
   const loadDashboard = (name) => {
     const savedDashboard = localStorage.getItem(name);
@@ -173,7 +174,13 @@ const Dashboard = ({ onLayoutChange }) => {
     setSavedDashboards(savedDashboards.filter(dashboard => dashboard !== name));
     setDashboardName(''); // Clear the dashboard name when deleting
   };
-  
+
+  const handleDashboardSelection = (event) => {
+    const selectedDashboard = event.target.value;
+    if (selectedDashboard) {
+      // router.push(`/dashboard/${selectedDashboard}`);
+    }
+  };
 
   const createElement = (el) => {
     return (
@@ -230,10 +237,10 @@ const Dashboard = ({ onLayoutChange }) => {
             style={inputStyle}
           />
           <button style={buttonStyle} onClick={saveDashboard}>Save Dashboard</button>
-          <select onChange={(e) => loadDashboard(e.target.value)} style={selectStyle}>
+          <select onChange={handleDashboardSelection} style={selectStyle}>
             <option value="">Load Dashboard</option>
             {savedDashboards.map(dashboard => (
-              <option key={dashboard} value={dashboard}>{dashboard.replace('dashboard_', '')}</option>
+              <option key={dashboard} value={dashboard.replace('dashboard_', '')}>{dashboard.replace('dashboard_', '')}</option>
             ))}
           </select>
           <select onChange={(e) => deleteDashboard(e.target.value)} style={selectStyle}>
@@ -270,3 +277,4 @@ const Dashboard = ({ onLayoutChange }) => {
 };
 
 export default Dashboard;
+
