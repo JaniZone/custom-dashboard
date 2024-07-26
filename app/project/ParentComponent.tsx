@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import FileInput from "./FileInput";
+// import FileInput from "./FileInput";
 
 interface FileData {
   name: string;
@@ -18,7 +18,7 @@ const ParentComponent: React.FC = () => {
 
   return (
     <div>
-      <FileInput onFilesDataChange={handleFilesDataChange} />
+      {/* {<FileInput onFilesDataChange={handleFilesDataChange} />} */}
       {filesData.length > 0 && (
         <div>
           <h1>Files Data:</h1>
