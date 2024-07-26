@@ -1,5 +1,5 @@
 export const buttonStyle = {
-  background: "#3498db",
+  background: "#708297",
   color: "#fff",
   border: "none",
   padding: "10px 20px",
@@ -73,4 +73,14 @@ export const inputStyle = {
   borderRadius: "5px",
   border: "1px solid #ddd",
   margin: "0 5px",
+};
+
+export const dropzoneStyle = {
+  border: "2px dashed #3498db",
+  borderRadius: "5px",
+  padding: "20px",
+  textAlign: "center",
+  cursor: "pointer",
+  color: "#3498db",
+  margin: "10px 0",
 };

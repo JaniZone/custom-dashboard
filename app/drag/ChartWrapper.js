@@ -6,6 +6,7 @@ import PieChart from '@/components/pie-chart';
 import ColumnChart from '@/components/column-chart';
 
 const ChartWrapper = ({ el, chartType, chartData }) => {
+  
   switch (chartType[el.i]) {
     case 'PieChart':
       return <PieChart data={chartData[el.i]} height={el.h * 100} width={el.w * 100} />;
