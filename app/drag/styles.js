@@ -13,8 +13,8 @@ export const removeStyle = {
   right: "10px",
   top: "10px",
   cursor: "pointer",
-  color: "#e74c3c",
-  background: "#fff",
+  color: "#fff",
+  background: "#e74c3c",
   borderRadius: "50%",
   width: "20px",
   height: "20px",
@@ -33,13 +33,14 @@ export const modalStyle = {
     transform: "translate(-50%, -50%)",
     width: "400px",
     padding: "20px",
-    background: "#fff",
+    background: "#1f2937",
+    color: "#fff",
     borderRadius: "8px",
   },
 };
 
 export const canvasContainerStyle = {
-  backgroundColor: "#000",
+  backgroundColor: "#1f2937",
   position: "relative",
   overflow: "hidden",
   borderRadius: "8px",
@@ -52,8 +53,8 @@ export const headerStyle = {
   justifyContent: "space-between",
   alignItems: "center",
   padding: "10px",
-  backgroundColor: "#fff",
-  borderBottom: "1px solid #ddd",
+  backgroundColor: "#111827",
+  borderBottom: "1px solid #374151",
 };
 
 export const controlsStyle = {
@@ -64,15 +65,17 @@ export const controlsStyle = {
 export const selectStyle = {
   padding: "5px",
   borderRadius: "5px",
-  border: "1px solid #ddd",
-  margin: "0 5px",
+  border: "none",
+  backgroundColor: "#374151",
+  color: "#fff",
 };
 
 export const inputStyle = {
   padding: "5px",
   borderRadius: "5px",
-  border: "1px solid #ddd",
-  margin: "0 5px",
+  border: "none",
+  backgroundColor: "#374151",
+  color: "#fff",
 };
 
 export const dropzoneStyle = {

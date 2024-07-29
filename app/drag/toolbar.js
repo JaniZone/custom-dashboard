@@ -6,7 +6,7 @@ const Toolbar = () => {
   return (
     <div style={{
       width: '250px',
-      backgroundColor: '#f0f0f0',
+      backgroundColor: '#000000',
       padding: '10px',
       boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
       height: '100vh',
