@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import ChartWrapper from './ChartWrapper';
-import Toolbar from './Toolbar';
+import Toolbar from './toolbar'; // Import the Toolbar
 import Dropzone from './Dropzone';
 import { buttonStyle, removeStyle, modalStyle, canvasContainerStyle, headerStyle, controlsStyle, selectStyle, inputStyle } from './styles';
 import * as XLSX from 'xlsx';
