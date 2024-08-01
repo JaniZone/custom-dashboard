@@ -1,7 +1,7 @@
 // pages/index.tsx
 "use client";
 import React from 'react';
-// import fs from 'fs';
+import fs from 'fs';
 import path from 'path';
 import { NextPage } from 'next';
 
@@ -11,6 +11,7 @@ const Home: NextPage = () => {
             name: 'John Doe',
             age: 30,
             email: 'johndoe@example.com'
+            
         };
 
         const jsonData = JSON.stringify(data, null, 2);
