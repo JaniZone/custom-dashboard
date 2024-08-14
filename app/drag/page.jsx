@@ -10,13 +10,15 @@ import Dropzone from './Dropzone';
 import { buttonStyle, removeStyle, modalStyle, canvasContainerStyle, headerStyle, controlsStyle, selectStyle, inputStyle, downloadLinkStyle } from './styles';
 import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';  // Import the uuid library
 import './styles.css'; // Import your styles
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 const Dashboard = ({ onLayoutChange }) => {
+  const router = useRouter();
+
   const [items, setItems] = useState([]);
   const [newCounter, setNewCounter] = useState(0);
   const [cols, setCols] = useState({ 
@@ -32,7 +34,7 @@ const Dashboard = ({ onLayoutChange }) => {
   const [currentWidget, setCurrentWidget] = useState(null);
   const [dashboardName, setDashboardName] = useState('');
   const [savedDashboards, setSavedDashboards] = useState([]);
-  // const router = useRouter();
+ 
 
   useEffect(() => {
     // Load saved dashboards from localStorage
@@ -159,7 +161,8 @@ const Dashboard = ({ onLayoutChange }) => {
       };
       localStorage.setItem(`dashboard_${dashboardId}`, JSON.stringify(dashboardState));
       alert('Dashboard saved!');
-      setSavedDashboards([...savedDashboards, { id: `dashboard_${dashboardId}`, name: dashboardName }]);
+      router.push(`/dashboard/${dashboardId}`);
+      //setSavedDashboards([...savedDashboards, { id: `dashboard_${dashboardId}`, name: dashboardName }]);
     }
   };
 

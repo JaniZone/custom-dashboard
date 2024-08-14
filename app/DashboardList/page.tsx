@@ -1,8 +1,7 @@
-"use client";
-
-import React, { useEffect, useState, FC } from "react";
+"use client"
+import { useEffect, useState, FC } from "react";
 import Link from "next/link";
-import styles from "../styles/dashboardlist.module.css"; // Assuming you have a CSS module for styling
+import styles from "../styles/dashboardlist.module.css";
 
 interface Dashboard {
   id: number;
@@ -16,6 +15,7 @@ const DashboardList: FC = () => {
   const [selectedDashboardToDelete, setSelectedDashboardToDelete] =
     useState<string>("");
 
+  // Correct place to use useEffect
   useEffect(() => {
     // Load saved dashboards from localStorage
     const savedDashboards = Object.keys(localStorage)
@@ -25,22 +25,29 @@ const DashboardList: FC = () => {
         id: dashboard.id,
         name: dashboard.name,
         thumbnail: dashboard.thumbnail,
-        link: `/Dashboard/${dashboard.name}`, // Generate link dynamically
+        link: `/dashboard/${dashboard.id}`, // Use id as a number
       }));
 
     setDashboards(savedDashboards);
-  }, []);
+  }, []); // Empty dependency array ensures this runs once on component mount
 
   const handleDeleteDashboard = () => {
     if (selectedDashboardToDelete) {
+      // Remove the dashboard from localStorage
       localStorage.removeItem(`dashboard_${selectedDashboardToDelete}`);
-      setDashboards(
-        dashboards.filter(
-          (dashboard) => dashboard.name !== selectedDashboardToDelete
+
+      // Remove the dashboard from state
+      setDashboards((prevDashboards) =>
+        prevDashboards.filter(
+          (dashboard) => dashboard.id.toString() !== selectedDashboardToDelete // Ensure id comparison is correct
         )
       );
+
       setSelectedDashboardToDelete(""); // Clear selected item
       alert("Dashboard deleted!");
+
+      // Optionally, re-fetch dashboards to ensure the list is up-to-date
+      // (This will be redundant as we already filter out the deleted item from state)
     }
   };
 
@@ -62,7 +69,7 @@ const DashboardList: FC = () => {
         >
           <option value="">Select Dashboard to Delete</option>
           {dashboards.map((dashboard) => (
-            <option key={dashboard.id} value={dashboard.name}>
+            <option key={dashboard.id} value={dashboard.id.toString()}> {/* Convert id to string */}
               {dashboard.name}
             </option>
           ))}
@@ -97,3 +104,8 @@ const DashboardList: FC = () => {
 };
 
 export default DashboardList;
+
+
+
+
+
