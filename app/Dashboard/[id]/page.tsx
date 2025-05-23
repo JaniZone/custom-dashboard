@@ -1,5 +1,6 @@
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+"use client";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface Dashboard {
   name: string;
@@ -8,18 +9,18 @@ interface Dashboard {
 }
 
 const DashboardPage = () => {
+  const params = useParams();
   const router = useRouter();
-  const { id } = router.query;
+  const id = params?.id;
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
 
   useEffect(() => {
-    
-    if (id && typeof id === 'string') {
+    if (id && typeof id === "string") {
       const dashboardData = localStorage.getItem(`dashboard_${id}`);
       if (dashboardData) {
         setDashboard(JSON.parse(dashboardData));
       } else {
-        router.push('/'); // Redirect to home or an error page
+        router.push("/"); // Redirect to home or an error page
       }
     }
   }, [id]);
@@ -36,4 +37,3 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
-
