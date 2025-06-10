@@ -9,9 +9,9 @@
 }
 .main {
   display: flex;
-  display: inline-table;
-  margin-left: 10px;
-
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start; /* aligns containers from left */
 }
 
 .fileInfo {
@@ -33,8 +33,8 @@
   border-radius: 5px;
   padding: 20px;
   margin-bottom: 20px;
-  width: 80%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: inline-block;
 }
 
 .buttonContainer {

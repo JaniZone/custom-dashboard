@@ -10,12 +10,15 @@ import Dropzone from './Dropzone';
 import { buttonStyle, removeStyle, modalStyle, canvasContainerStyle, headerStyle, controlsStyle, selectStyle, inputStyle, downloadLinkStyle } from './styles';
 import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
+import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';  // Import the uuid library
 import './styles.css'; // Import your styles
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 const Dashboard = ({ onLayoutChange }) => {
+  const router = useRouter();
+
   const [items, setItems] = useState([]);
   const [newCounter, setNewCounter] = useState(0);
   const [cols, setCols] = useState({ 
@@ -31,6 +34,7 @@ const Dashboard = ({ onLayoutChange }) => {
   const [currentWidget, setCurrentWidget] = useState(null);
   const [dashboardName, setDashboardName] = useState('');
   const [savedDashboards, setSavedDashboards] = useState([]);
+  const [currentDashboardId, setCurrentDashboardId] = useState(null);
 
   useEffect(() => {
     // Load saved dashboards from localStorage
@@ -146,7 +150,8 @@ const Dashboard = ({ onLayoutChange }) => {
       });
       const thumbnail = canvas.toDataURL("image/png");
 
-      const dashboardId = uuidv4(); // Generate a unique ID for the dashboard
+      const dashboardId =currentDashboardId || uuidv4();
+      // Generate a unique ID for the dashboard
       const dashboardState = {
         id: dashboardId,
         name: dashboardName,
@@ -156,8 +161,10 @@ const Dashboard = ({ onLayoutChange }) => {
         thumbnail,
       };
       localStorage.setItem(`dashboard_${dashboardId}`, JSON.stringify(dashboardState));
+      setCurrentDashboardId(dashboardId);
       alert('Dashboard saved!');
-      setSavedDashboards([...savedDashboards, { id: `dashboard_${dashboardId}`, name: dashboardName }]);
+      router.push(`/Dashboard/${dashboardId}`);
+      //setSavedDashboards([...savedDashboards, { id: `dashboard_${dashboardId}`, name: dashboardName }]);
     }
   };
 
@@ -170,6 +177,7 @@ const Dashboard = ({ onLayoutChange }) => {
       setChartType(chartType);
       setNewCounter(items.length); // Set newCounter to avoid ID conflicts
       setDashboardName(name); // Set the dashboard name
+      setCurrentDashboardId(id);
     }
   };
 
@@ -178,7 +186,11 @@ const Dashboard = ({ onLayoutChange }) => {
     alert('Dashboard deleted!');
     setSavedDashboards(savedDashboards.filter(dashboard => dashboard.id !== id));
     setDashboardName(''); // Clear the dashboard name when deleting
+    if (currentDashboardId === id) setCurrentDashboardId(null);
   };
+
+  
+
   
   const createElement = (el) => {
     return (

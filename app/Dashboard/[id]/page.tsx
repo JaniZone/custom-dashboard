@@ -1,41 +1,38 @@
-// pages/dashboard/[id].tsx
-// import { useRouter } from 'next/router';
-import { FC } from "react";
+"use client";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
 
 interface Dashboard {
-  id: number;
   name: string;
-  link: string; // Add the link property
+  thumbnail: string;
+  // Add other properties if needed
 }
 
-const dashboards: Dashboard[] = [
-  { id: 1, name: "Sales Dashboard", link: "/page2" },
-  { id: 2, name: "Marketing Dashboard", link: "/marketing-dashboard" },
-  { id: 3, name: "HR Dashboard", link: "/hr-dashboard" },
-];
+const DashboardPage = () => {
+  const params = useParams();
+  const router = useRouter();
+  const id = params?.id;
+  const [dashboard, setDashboard] = useState<Dashboard | null>(null);
 
-const DashboardPage: FC = () => {
-  // const router = useRouter();
-  // const { id } = router.query;
-  // const dashboardId = Number(id); // Convert id to number
-
-  const dashboard = dashboards.find((d) => d.id === 123);
-
-  if (!dashboard) {
-    return <p>Dashboard not found</p>;
-  }
-
-  // Handle navigation to the link associated with the dashboard
-  const handleNavigate = () => {
-    if (dashboard.link) {
-      // router.push(dashboard.link);
+  useEffect(() => {
+    if (id && typeof id === "string") {
+      const dashboardData = localStorage.getItem(`dashboard_${id}`);
+      if (dashboardData) {
+        setDashboard(JSON.parse(dashboardData));
+      } else {
+        router.push(`/DashboardList`); // Redirect to home or an error page
+      }
     }
-  };
+  }, [id]);
+
+  if (!dashboard) return <div>Loading...</div>;
 
   return (
     <div>
       <h1>{dashboard.name}</h1>
-      <button onClick={handleNavigate}>Go to {dashboard.name}</button>
+      <img src={dashboard.thumbnail} alt={dashboard.name} />
+      {/* Render other dashboard details here */}
     </div>
   );
 };
