@@ -2,6 +2,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+
 interface Dashboard {
   name: string;
   thumbnail: string;
@@ -20,7 +21,7 @@ const DashboardPage = () => {
       if (dashboardData) {
         setDashboard(JSON.parse(dashboardData));
       } else {
-        router.push("/"); // Redirect to home or an error page
+        router.push(`/DashboardList`); // Redirect to home or an error page
       }
     }
   }, [id]);

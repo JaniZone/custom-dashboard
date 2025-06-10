@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import ChartWrapper from './ChartWrapper';
-import Toolbar from './Toolbar'; // Import the Toolbar
+import Toolbar from './toolbar'; // Import the Toolbar
 import Dropzone from './Dropzone';
 import { buttonStyle, removeStyle, modalStyle, canvasContainerStyle, headerStyle, controlsStyle, selectStyle, inputStyle, downloadLinkStyle } from './styles';
 import * as XLSX from 'xlsx';
@@ -34,7 +34,7 @@ const Dashboard = ({ onLayoutChange }) => {
   const [currentWidget, setCurrentWidget] = useState(null);
   const [dashboardName, setDashboardName] = useState('');
   const [savedDashboards, setSavedDashboards] = useState([]);
- 
+  const [currentDashboardId, setCurrentDashboardId] = useState(null);
 
   useEffect(() => {
     // Load saved dashboards from localStorage
@@ -150,7 +150,8 @@ const Dashboard = ({ onLayoutChange }) => {
       });
       const thumbnail = canvas.toDataURL("image/png");
 
-      const dashboardId = uuidv4(); // Generate a unique ID for the dashboard
+      const dashboardId =currentDashboardId || uuidv4();
+      // Generate a unique ID for the dashboard
       const dashboardState = {
         id: dashboardId,
         name: dashboardName,
@@ -160,8 +161,9 @@ const Dashboard = ({ onLayoutChange }) => {
         thumbnail,
       };
       localStorage.setItem(`dashboard_${dashboardId}`, JSON.stringify(dashboardState));
+      setCurrentDashboardId(dashboardId);
       alert('Dashboard saved!');
-      router.push(`/dashboard/${dashboardId}`);
+      router.push(`/Dashboard/${dashboardId}`);
       //setSavedDashboards([...savedDashboards, { id: `dashboard_${dashboardId}`, name: dashboardName }]);
     }
   };
@@ -175,6 +177,7 @@ const Dashboard = ({ onLayoutChange }) => {
       setChartType(chartType);
       setNewCounter(items.length); // Set newCounter to avoid ID conflicts
       setDashboardName(name); // Set the dashboard name
+      setCurrentDashboardId(id);
     }
   };
 
@@ -183,14 +186,10 @@ const Dashboard = ({ onLayoutChange }) => {
     alert('Dashboard deleted!');
     setSavedDashboards(savedDashboards.filter(dashboard => dashboard.id !== id));
     setDashboardName(''); // Clear the dashboard name when deleting
+    if (currentDashboardId === id) setCurrentDashboardId(null);
   };
 
-  const handleDashboardSelection = (event) => {
-    const selectedDashboard = event.target.value;
-    if (selectedDashboard) {
-      // router.push(`/dashboard/${selectedDashboard}`);
-    }
-  };
+  
 
   
   const createElement = (el) => {

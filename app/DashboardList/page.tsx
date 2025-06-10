@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect, useState, FC } from "react";
 import Link from "next/link";
 import styles from "../styles/dashboardlist.module.css";
@@ -25,7 +25,8 @@ const DashboardList: FC = () => {
         id: dashboard.id,
         name: dashboard.name,
         thumbnail: dashboard.thumbnail,
-        link: `/dashboard/${dashboard.id}`, // Use id as a number
+        link: `/Dashboard/${dashboard.id.replace("dashboard_", "")}`
+, // Use id as a number
       }));
 
     setDashboards(savedDashboards);
@@ -69,7 +70,9 @@ const DashboardList: FC = () => {
         >
           <option value="">Select Dashboard to Delete</option>
           {dashboards.map((dashboard) => (
-            <option key={dashboard.id} value={dashboard.id.toString()}> {/* Convert id to string */}
+            <option key={dashboard.id} value={dashboard.id.toString()}>
+              {" "}
+              {/* Convert id to string */}
               {dashboard.name}
             </option>
           ))}
@@ -104,8 +107,3 @@ const DashboardList: FC = () => {
 };
 
 export default DashboardList;
-
-
-
-
-
