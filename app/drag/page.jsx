@@ -5,12 +5,11 @@ import Modal from 'react-modal';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import ChartWrapper from './ChartWrapper';
-import Toolbar from './toolbar'; // Import the Toolbar
+import Toolbar from './Toolbar'; // Import the Toolbar
 import Dropzone from './Dropzone';
-import { buttonStyle, removeStyle, modalStyle, canvasContainerStyle, headerStyle, controlsStyle, selectStyle, inputStyle, downloadLinkStyle } from './styles';
+import { buttonStyle, removeStyle, modalStyle, canvasContainerStyle, headerStyle, controlsStyle, selectStyle, inputStyle } from './styles';
 import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
-import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';  // Import the uuid library
 import './styles.css'; // Import your styles
 
@@ -21,13 +20,7 @@ const Dashboard = ({ onLayoutChange }) => {
 
   const [items, setItems] = useState([]);
   const [newCounter, setNewCounter] = useState(0);
-  const [cols, setCols] = useState({ 
-    lg: 12,
-    md: 10,
-    sm: 6,
-    xs: 4,
-    xxs: 2,
-  });
+  const [cols, setCols] = useState({ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 });
   const [chartData, setChartData] = useState({});
   const [chartType, setChartType] = useState({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -37,7 +30,6 @@ const Dashboard = ({ onLayoutChange }) => {
   const [currentDashboardId, setCurrentDashboardId] = useState(null);
 
   useEffect(() => {
-    // Load saved dashboards from localStorage
     const dashboards = Object.keys(localStorage).filter(key => key.startsWith('dashboard_'));
     setSavedDashboards(dashboards.map(key => ({
       id: key,
@@ -49,23 +41,11 @@ const Dashboard = ({ onLayoutChange }) => {
     const newItemId = `n${newCounter}`;
     setItems((prevItems) => [
       ...prevItems,
-      {
-        i: newItemId,
-        x: (prevItems.length * 2) % (cols.lg || 12),
-        y: Infinity,
-        w: 4,
-        h: 4,
-      },
+      { i: newItemId, x: (prevItems.length * 2) % (cols.lg || 12), y: Infinity, w: 4, h: 4 },
     ]);
     setNewCounter((prevCounter) => prevCounter + 1);
-    setChartData((prevData) => ({
-      ...prevData,
-      [newItemId]: [],
-    }));
-    setChartType((prevType) => ({
-      ...prevType,
-      [newItemId]: "BarChart",
-    }));
+    setChartData((prevData) => ({ ...prevData, [newItemId]: [] }));
+    setChartType((prevType) => ({ ...prevType, [newItemId]: "BarChart" }));
   }, [newCounter, cols]);
 
   const onRemoveItem = useCallback((i) => {
@@ -86,21 +66,15 @@ const Dashboard = ({ onLayoutChange }) => {
     setCols(newCols);
   }, []);
 
-  const handleLayoutChange = useCallback(
-    (layout) => {
-      setItems(layout);
-      if (onLayoutChange) {
-        onLayoutChange(layout);
-      }
-    },
-    [onLayoutChange]
-  );
+  const handleLayoutChange = useCallback((layout) => {
+    setItems(layout);
+    if (onLayoutChange) {
+      onLayoutChange(layout);
+    }
+  }, [onLayoutChange]);
 
   const handleChartTypeChange = (id, type) => {
-    setChartType((prevType) => ({
-      ...prevType,
-      [id]: type,
-    }));
+    setChartType((prevType) => ({ ...prevType, [id]: type }));
   };
 
   const handleFileDrop = (id, files) => {
@@ -117,15 +91,11 @@ const Dashboard = ({ onLayoutChange }) => {
         Population: row[1],
         colorField: row[2],
       }));
-      setChartData((prevData) => ({
-        ...prevData,
-        [id]: parsedData,
-      }));
+      setChartData((prevData) => ({ ...prevData, [id]: parsedData }));
       closeModal();
     };
     reader.readAsBinaryString(file);
   };
-
   const openModal = (id) => {
     setCurrentWidget(id);
     setModalIsOpen(true);
@@ -142,16 +112,12 @@ const Dashboard = ({ onLayoutChange }) => {
       return;
     }
 
-    // Capture the canvas thumbnail
     const canvasElement = document.querySelector(".canvas-container");
     if (canvasElement) {
-      const canvas = await html2canvas(canvasElement, {
-        backgroundColor: null, // Ensure the background is transparent
-      });
+      const canvas = await html2canvas(canvasElement, { backgroundColor: null });
       const thumbnail = canvas.toDataURL("image/png");
 
-      const dashboardId =currentDashboardId || uuidv4();
-      // Generate a unique ID for the dashboard
+      const dashboardId = uuidv4(); // Generate a unique ID for the dashboard
       const dashboardState = {
         id: dashboardId,
         name: dashboardName,
@@ -177,7 +143,6 @@ const Dashboard = ({ onLayoutChange }) => {
       setChartType(chartType);
       setNewCounter(items.length); // Set newCounter to avoid ID conflicts
       setDashboardName(name); // Set the dashboard name
-      setCurrentDashboardId(id);
     }
   };
 
@@ -186,11 +151,7 @@ const Dashboard = ({ onLayoutChange }) => {
     alert('Dashboard deleted!');
     setSavedDashboards(savedDashboards.filter(dashboard => dashboard.id !== id));
     setDashboardName(''); // Clear the dashboard name when deleting
-    if (currentDashboardId === id) setCurrentDashboardId(null);
   };
-
-  
-
   
   const createElement = (el) => {
     return (
@@ -236,7 +197,7 @@ const Dashboard = ({ onLayoutChange }) => {
 
   return (
     <div style={{ display: 'flex' }}>
-      <Toolbar /> {/* Add the Toolbar here */}
+      <Toolbar />
       <div style={{ marginLeft: '250px', flex: 1 }}>
         <div className="header" style={headerStyle}>
           <div className="controls" style={controlsStyle}>
@@ -249,20 +210,20 @@ const Dashboard = ({ onLayoutChange }) => {
               style={inputStyle}
             />
             <button style={buttonStyle} onClick={saveDashboard}>Save Dashboard</button>
-          <select onChange={(e) => loadDashboard(e.target.value)} style={selectStyle}>
-            <option value="">Load Dashboard</option>
-            {savedDashboards.map(dashboard => (
-              <option key={dashboard.id} value={dashboard.id}>{dashboard.name}</option>
-            ))}
-          </select>
-          <select onChange={(e) => deleteDashboard(e.target.value)} style={selectStyle}>
-            <option value="">Delete Dashboard</option>
-            {savedDashboards.map(dashboard => (
-              <option key={dashboard.id} value={dashboard.id}>{dashboard.name}</option>
-            ))}
-          </select>
+            <select onChange={(e) => loadDashboard(e.target.value)} style={selectStyle}>
+              <option value="">Load Dashboard</option>
+              {savedDashboards.map(dashboard => (
+                <option key={dashboard.id} value={dashboard.id}>{dashboard.name}</option>
+              ))}
+            </select>
+            <select onChange={(e) => deleteDashboard(e.target.value)} style={selectStyle}>
+              <option value="">Delete Dashboard</option>
+              {savedDashboards.map(dashboard => (
+                <option key={dashboard.id} value={dashboard.id}>{dashboard.name}</option>
+              ))}
+            </select>
+          </div>
         </div>
-      </div>
         <div className="canvas-container" style={canvasContainerStyle}>
           <ResponsiveReactGridLayout
             className="layout"
@@ -274,19 +235,19 @@ const Dashboard = ({ onLayoutChange }) => {
           </ResponsiveReactGridLayout>
         </div>
         <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Add Data"
-        style={modalStyle}
-      >
-        <h2>Add Data</h2>
-        <button style={{ ...buttonStyle, background: "#e74c3c" }} onClick={closeModal}>Close</button>
-        <Dropzone currentWidget={currentWidget} handleFileDrop={handleFileDrop} />
-        <a href="/sample-data.xlsx" download style={{ marginTop: "10px", display: "block", color: "#3498db" }}>
-          Download Sample Data File
-        </a>
-      </Modal>
-    </div>
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Add Data"
+          style={modalStyle}
+        >
+          <h2>Add Data</h2>
+          <button style={{ ...buttonStyle, background: "#e74c3c" }} onClick={closeModal}>Close</button>
+          <Dropzone currentWidget={currentWidget} handleFileDrop={handleFileDrop} />
+          <a href="/sample-data.xlsx" download style={{ marginTop: "10px", display: "block", color: "#3498db" }}>
+            Download Sample Data File
+          </a>
+        </Modal>
+      </div>
     </div>
   );
 };

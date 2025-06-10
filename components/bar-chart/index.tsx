@@ -10,6 +10,7 @@ const BarChart = ({ data = [], height = 300, width = 300 }) => {
       xField: 'Country',
       yField: 'Population',
       colorField: 'Country',
+
       barStyle: { fillOpacity: 0.6 },
       padding: 50,
       autoFit: true,
